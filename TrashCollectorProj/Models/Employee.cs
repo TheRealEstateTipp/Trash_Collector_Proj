@@ -21,10 +21,6 @@ namespace TrashCollectorProj.Models
 
         public string PickUpConfirmation { get; set; }
 
-        [ForeignKey("Customer")]
-
-        public int CustomerID { get; set; }
-
-        public Customer Customer { get; set; }
+      
     }
 }
