@@ -10,7 +10,7 @@ namespace TrashCollectorProj.Models
     {
         [Key]
 
-        public int ID { get; set; }
+        public int CustomerID { get; set; }
 
         public string FirstName { get; set; }
 
