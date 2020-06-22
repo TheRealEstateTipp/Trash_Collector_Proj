@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollectorProj.Data;
+using TrashCollectorProj.Models;
 
 namespace TrashCollectorProj.Controllers
 {
@@ -21,57 +22,48 @@ namespace TrashCollectorProj.Controllers
 
 
         // GET: CustomersController
-        public ActionResult Index()
+        public IActionResult Index()
         {
             return View();
         }
 
         // GET: CustomersController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-            return View();
+            var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+            return View(customer);
         }
 
         // GET: CustomersController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
         // POST: CustomersController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Customer customer)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: CustomersController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+            return View(customer);
         }
 
         // POST: CustomersController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(Customer customer)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _context.Customers.Update(customer);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+    
         }
 
         // GET: CustomersController/Delete/5
