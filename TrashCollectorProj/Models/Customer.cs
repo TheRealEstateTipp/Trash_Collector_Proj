@@ -29,12 +29,15 @@ namespace TrashCollectorProj.Models
 
         public DayOfWeek PickUpDay { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime ExtraPickUp { get; set; }
 
         public double BalanceOwed { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime SupendPickUpStart { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime SuspendPickUpEnd { get; set; }
 
         [ForeignKey("IdentityUser")]
