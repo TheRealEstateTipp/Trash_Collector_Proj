@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrashCollectorProj.Data;
+using TrashCollectorProj.Models;
 
 namespace TrashCollectorProj.Controllers
 {
@@ -20,9 +22,20 @@ namespace TrashCollectorProj.Controllers
         }
 
         // GET: EmployeesController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            var userID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(e => e.IdentityUserID == userID).SingleOrDefault();
+           
+            if (employee == null)
+            {
+                return RedirectToAction("Create");
+            }
+
+            var dayofWeek = DateTime.Today.DayOfWeek;
+            List<Customer> todaysPickUps = _context.Customers.Where(p => p.ZipCode == employee.ServicingZipCode && p.PickUpDay == dayofWeek).ToList();
+
+            return View(todaysPickUps);
         }
 
         // GET: EmployeesController/Details/5
@@ -32,24 +45,19 @@ namespace TrashCollectorProj.Controllers
         }
 
         // GET: EmployeesController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
         // POST: EmployeesController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Employee employee)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            employee.IdentityUserID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _context.Employees.Add(employee);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: EmployeesController/Edit/5

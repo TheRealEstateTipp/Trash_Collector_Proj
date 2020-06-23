@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,6 +24,9 @@ namespace TrashCollectorProj.Models
 
         public string PickUpConfirmation { get; set; }
 
-      
+        [ForeignKey("IdentityUser")]
+
+        public string IdentityUserID { get; set; }
+        public IdentityUser IdentityUser { get; set; }
     }
 }
