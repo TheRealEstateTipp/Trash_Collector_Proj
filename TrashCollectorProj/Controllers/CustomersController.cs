@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,13 +25,15 @@ namespace TrashCollectorProj.Controllers
         // GET: CustomersController
         public IActionResult Index()
         {
+          
             return View();
         }
 
         // GET: CustomersController/Details/5
-        public IActionResult Details(int id)
+        public IActionResult Details()
         {
-            var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+            var userID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.IdentityUserID == userID).SingleOrDefault();
             return View(customer);
         }
 
@@ -44,15 +47,17 @@ namespace TrashCollectorProj.Controllers
         [HttpPost]
         public IActionResult Create(Customer customer)
         {
+            customer.IdentityUserID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context.Customers.Add(customer);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
         // GET: CustomersController/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult Edit()
         {
-            var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customers.Where(c => c.IdentityUserID == userId).SingleOrDefault();
             return View(customer);
         }
 
@@ -63,28 +68,8 @@ namespace TrashCollectorProj.Controllers
             _context.Customers.Update(customer);
             _context.SaveChanges();
             return RedirectToAction("Index");
-    
         }
 
-        // GET: CustomersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+ 
     }
 }
