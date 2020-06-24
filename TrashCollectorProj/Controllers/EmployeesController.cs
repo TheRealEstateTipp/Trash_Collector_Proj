@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TrashCollectorProj.Data;
 using TrashCollectorProj.Models;
 
@@ -39,9 +41,21 @@ namespace TrashCollectorProj.Controllers
         }
 
         // GET: EmployeesController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(string searchString)
         {
-            return View();
+            var userID = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(e => e.IdentityUserID == userID).SingleOrDefault();
+            var pickups = _context.Customers.Where(p => p.ZipCode == employee.ServicingZipCode).ToList();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var pickUpDay = _context.Customers.Select(p => p.PickUpDay).ToString();
+                var pickupByDay = _context.Customers.Where(p => p.ZipCode == employee.ServicingZipCode && pickUpDay.Contains(searchString)).ToList();
+                return View(pickupByDay);
+            }
+            
+            return View(pickups);
+
         }
 
         // GET: EmployeesController/Create
