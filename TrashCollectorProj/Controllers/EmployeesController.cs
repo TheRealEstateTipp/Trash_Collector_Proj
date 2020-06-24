@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using TrashCollectorProj.Data;
 using TrashCollectorProj.Models;
 
@@ -49,16 +50,24 @@ namespace TrashCollectorProj.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                var pickUpDay = _context.Customers.Select(p => p.PickUpDay).ToString();
-                var pickupByDay = _context.Customers.Where(p => p.ZipCode == employee.ServicingZipCode && pickUpDay.Contains(searchString)).ToList();
-                return View(pickupByDay);
+                var allCustomers = _context.Customers.Where(c => c.ZipCode == employee.ServicingZipCode); ;
+                List<Customer> rightDay = new List<Customer>();
+                foreach(Customer cust in allCustomers)
+                {
+                    if(cust.PickUpDay.ToString() == searchString)
+                    {
+                        rightDay.Add(cust);
+                    }
+                }
+
+                return View(rightDay);
             }
             
             return View(pickups);
 
         }
 
-        // GET: EmployeesController/Create
+        // GET: EmployeesController/Creat
         public IActionResult Create()
         {
             return View();
