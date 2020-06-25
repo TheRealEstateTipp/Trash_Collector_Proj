@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using TrashCollectorProj.Data;
 using TrashCollectorProj.Models;
 
@@ -124,6 +119,16 @@ namespace TrashCollectorProj.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult ConfirmPickUp(int id)
+        {
+          ;
+            var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+            customer.PickUpConfirmed = true;
+            customer.BalanceOwed += 50;
+            
+            return RedirectToAction("Index");
         }
     }
 }
