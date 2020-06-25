@@ -22,7 +22,6 @@ namespace TrashCollectorProj.Models
 
         public int ServicingZipCode { get; set; }
 
-        public string PickUpConfirmation { get; set; }
 
         [ForeignKey("IdentityUser")]
 

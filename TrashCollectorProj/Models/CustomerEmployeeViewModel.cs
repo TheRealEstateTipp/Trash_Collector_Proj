@@ -7,9 +7,9 @@ namespace TrashCollectorProj.Models
 {
     public class CustomerEmployeeViewModel
     {
-        public Customer Customer { get; set; }
+        public Customer customerVM { get; set; }
 
-        public Employee Employee { get; set; }
+        public Employee employeeVM { get; set; }
 
     }
 }

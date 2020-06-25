@@ -40,6 +40,8 @@ namespace TrashCollectorProj.Models
         [DataType(DataType.Date)]
         public DateTime SuspendPickUpEnd { get; set; }
 
+        public bool PickUpConfirmed { get; set; }
+
         [ForeignKey("IdentityUser")]
 
         public string IdentityUserID { get; set; }
