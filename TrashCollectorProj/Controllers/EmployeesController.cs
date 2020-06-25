@@ -127,6 +127,7 @@ namespace TrashCollectorProj.Controllers
             var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
             customer.PickUpConfirmed = true;
             customer.BalanceOwed += 50;
+            _context.SaveChanges();
             
             return RedirectToAction("Index");
         }
