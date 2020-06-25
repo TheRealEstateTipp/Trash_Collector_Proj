@@ -123,7 +123,7 @@ namespace TrashCollectorProj.Controllers
 
         public IActionResult ConfirmPickUp(int id)
         {
-          ;
+          
             var customer = _context.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
             customer.PickUpConfirmed = true;
             customer.BalanceOwed += 50;
